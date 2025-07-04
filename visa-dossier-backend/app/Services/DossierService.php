@@ -9,6 +9,23 @@ use Illuminate\Support\Facades\Log;
 
 class DossierService
 {
+    public function all(): array
+    {
+        try {
+            return [
+                'dossiers' => Dossier::all()->groupBy('category'),
+                'status' => 200,
+            ];
+        } catch (\Throwable $e) {
+            Log::error('Dossier Retrieval Failed: '.$e->getMessage(), ['exception' => $e]);
+
+            return [
+                'message' => 'Failed to retrieve dossiers. Please try again later.',
+                'status' => 500,
+            ];
+        }
+    }
+
     public function store(UploadDossierRequest $request): array
     {
         try {

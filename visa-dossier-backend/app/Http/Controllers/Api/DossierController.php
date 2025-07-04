@@ -16,6 +16,22 @@ class DossierController extends Controller
      */
     public function __construct(protected DossierService $dossierService) {}
 
+    public function index(): JsonResponse
+    {
+        $payload = $this->dossierService->all();
+
+        if ($payload['status'] === Response::HTTP_OK) {
+            return response()->json([
+                'data' => $payload['dossiers']->map(fn ($items) => DossierCollection::collection($items)),
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'message' => $payload['message'],
+            'status' => $payload['status'] ?? Response::HTTP_INTERNAL_SERVER_ERROR,
+        ]);
+    }
+
     public function store(UploadDossierRequest $request): JsonResponse
     {
         $payload = $this->dossierService->store($request);
