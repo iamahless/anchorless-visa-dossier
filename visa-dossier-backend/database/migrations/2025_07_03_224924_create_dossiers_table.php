@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('dossiers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('category');
             $table->string('path');
             $table->string('mime_type');
-            $table->string('category');
+            $table->unsignedInteger('size');
             $table->timestamps();
         });
     }
