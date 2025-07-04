@@ -11,4 +11,5 @@ Route::get('/user', function (Request $request) {
 Route::prefix('dossiers')->group(function () {
     Route::get('/', [DossierController::class, 'index'])->name('get-all-dossiers');
     Route::post('/', [DossierController::class, 'store'])->name('upload-dossier');
+    Route::delete('/{id}', [DossierController::class, 'destroy'])->name('delete-dossier');
 });

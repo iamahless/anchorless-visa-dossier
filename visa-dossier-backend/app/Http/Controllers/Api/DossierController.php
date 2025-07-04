@@ -46,4 +46,17 @@ class DossierController extends Controller
             'message' => $payload['message'],
         ], $payload['status'] ?? Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function destroy(string $dossierId): JsonResponse
+    {
+        $payload = $this->dossierService->delete($dossierId);
+
+        if ($payload['status'] === Response::HTTP_NO_CONTENT) {
+            return response()->json(null, Response::HTTP_NO_CONTENT);
+        }
+
+        return response()->json([
+            'message' => $payload['message'],
+        ], $payload['status'] ?? Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }
