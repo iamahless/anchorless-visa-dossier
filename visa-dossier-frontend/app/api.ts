@@ -3,10 +3,13 @@ const BASE_URL = 'http://visa-dossier-backend.test/api';
 
 export async function getDossiers() {
 	const response = await fetch(`${BASE_URL}/dossiers`);
-	if (response.status !== 200) {
-		return { success: false, error: response.json() };
+
+	if (response.status === 200) {
+		return response.json();
 	}
-	return { success: true, response: response.json() };
+
+	const errorText = await response.json();
+	throw new Error(errorText?.message || 'Failed to fetch dossiers');
 }
 
 export async function uploadDossier(formData: any) {
@@ -16,18 +19,22 @@ export async function uploadDossier(formData: any) {
 	});
 
 	if (response.status === 201) {
-		return { success: true, response: await response.json() };
+		return response.json();
 	}
 
-	return response.json();
+	const errorText = await response.json();
+	throw new Error(errorText?.message || 'Failed to upload dossier');
 }
 
 export async function deleteDossier(dossierId: string) {
 	const response = await fetch(`${BASE_URL}/dossiers/${dossierId}`, {
 		method: 'DELETE',
 	});
+
 	if (response.status === 204) {
-		return { success: true, response: null };
+		return null;
 	}
-	return { success: false, response: await response.json() };
+
+	const errorText = await response.json();
+	throw new Error(errorText?.message || 'Failed to delete dossier');
 }

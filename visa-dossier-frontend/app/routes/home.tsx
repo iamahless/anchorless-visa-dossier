@@ -1,59 +1,71 @@
-import type { ActionFunctionArgs } from "react-router";
 import { redirect } from "react-router";
 import { deleteDossier, getDossiers, uploadDossier } from "~/api";
 import { VisaForm } from "~/components/visa-form";
 import type { Route } from "./+types/home";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta(_: Route.MetaArgs) {
   return [
     { title: "Visa Dossier" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
 
-export async function loader({ }: Route.LoaderArgs) {
-  const { success, response } = await getDossiers();
-
-  return response;
+export async function loader(_: Route.LoaderArgs) {
+  try {
+    return await getDossiers();
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Failed to load dossiers.",
+    }
+  }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
-  const intent = formData.get('intent');
+  const intent = String(formData.get('intent'));
+  const name = String(formData.get('name'));
 
   if (intent === 'upload') {
     const uploadFormData = new FormData();
     const file = formData.get('file');
-    const category = formData.get('category');
+    const category = String(formData.get('category'));
 
     if (file instanceof File && category) {
       uploadFormData.append('file', file);
-      uploadFormData.append('category', category.toString());
-      const { success, response } = await uploadDossier(uploadFormData);
-      if (!success) {
-        throw new Error(response.message || "Failed to upload dossier");
+      uploadFormData.append('category', category);
+      try {
+        return await uploadDossier(uploadFormData);
+      } catch (error) {
+        return {
+          error: error instanceof Error ? error.message : "Failed to upload dossier."
+        }
       }
     } else {
-      throw new Error("File or category is missing in form data.");
+      return {
+        error: "File or category is missing."
+      }
     }
 
   } else if (intent === 'delete') {
-    const dossierId = formData.get('dossierId');
-    if (typeof dossierId === 'string') {
-      const { success, response } = await deleteDossier(dossierId);
-    } else {
-      throw new Error("Dossier ID is missing in form data.");
+    const dossierId = String(formData.get('dossierId'));
+    try {
+      return await deleteDossier(dossierId);
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : "Failed to delete dossier."
+      }
     }
+
   }
+
   return redirect('/');
 }
-
 
 export function HydrateFallback() {
   return <div>Loading...</div>;
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function Home({ loaderData, actionData }: Route.ComponentProps) {
   const { data } = loaderData;
 
   return (
