@@ -23,7 +23,6 @@ export async function loader(_: Route.LoaderArgs) {
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const intent = String(formData.get('intent'));
-  const name = String(formData.get('name'));
 
   if (intent === 'upload') {
     const uploadFormData = new FormData();
@@ -34,7 +33,10 @@ export async function action({ request }: Route.ActionArgs) {
       uploadFormData.append('file', file);
       uploadFormData.append('category', category);
       try {
-        return await uploadDossier(uploadFormData);
+        await uploadDossier(uploadFormData);
+        return {
+          success: 'Dossier uploaded successfully.'
+        }
       } catch (error) {
         return {
           error: error instanceof Error ? error.message : "Failed to upload dossier."
@@ -49,7 +51,10 @@ export async function action({ request }: Route.ActionArgs) {
   } else if (intent === 'delete') {
     const dossierId = String(formData.get('dossierId'));
     try {
-      return await deleteDossier(dossierId);
+      await deleteDossier(dossierId);
+      return {
+        success: 'Dossier deleted successfully.'
+      }
     } catch (error) {
       return {
         error: error instanceof Error ? error.message : "Failed to delete dossier."
@@ -65,7 +70,7 @@ export function HydrateFallback() {
   return <div>Loading...</div>;
 }
 
-export default function Home({ loaderData, actionData }: Route.ComponentProps) {
+export default function Home({ loaderData }: Route.ComponentProps) {
   const { data } = loaderData;
 
   return (

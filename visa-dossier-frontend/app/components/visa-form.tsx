@@ -1,34 +1,32 @@
 import { PaperClipIcon } from '@heroicons/react/20/solid';
-import type { FormEvent } from 'react';
-import { useFetcher, useSubmit } from "react-router";
+import React, { type FormEvent } from 'react';
+import { useFetcher } from "react-router";
 import type { DossierCardProps } from '~/type';
 import ErrorNotification from './error-notification';
+import SuccessNotification from './success-notification';
 
 export function VisaForm({ title, category, dossiers = [] }: DossierCardProps) {
 	const fetcher = useFetcher();
 	let error: React.ReactNode;
-	const isUploading = fetcher.state !== "idle";
+	let success: React.ReactNode;
+	let isUploading = fetcher.state !== "idle";
 
-	const submit = useSubmit();
-
-	function handleDelete(event: FormEvent) {
-		event.preventDefault();
-		const form = event.currentTarget as HTMLFormElement;
-		const confirmed = confirm(`Are you sure you want to delete the dossier "${form.name.value}"?`);
-		if (!confirmed) return;
-		const formData = new FormData(form);
-		submit(formData, { method: "post" });
-	}
-
-	if (fetcher?.data?.error) {
+	if (fetcher.data?.error) {
 		error = <ErrorNotification
-			showPopup={fetcher?.data.error ? true : false}
-			message={fetcher?.data.error || "An error occurred while processing your request."}
+			showErrorPopup={!!fetcher?.data.error}
+			errorMessage={fetcher?.data.error || "An error occurred while processing your request."}
+		/>
+	}
+	if (fetcher.data?.success) {
+		success = <SuccessNotification
+			showSuccessPopup={!!fetcher?.data.success}
+			successMessage={fetcher?.data.success || "The operation was successful"}
 		/>
 	}
 
 	return (
 		<>
+			{success}
 			<div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
 				<div className="px-4 py-5 sm:px-4">
 					<h3 className="text-base font-semibold text-gray-900">{title}</h3>
@@ -47,7 +45,15 @@ export function VisaForm({ title, category, dossiers = [] }: DossierCardProps) {
 										</div>
 									</div>
 									<div className="ml-4 flex shrink-0">
-										<form onSubmit={handleDelete}>
+										<fetcher.Form method="post" onSubmit={(event: FormEvent) => {
+											if (
+												!confirm(
+													"Please confirm you want to delete this record."
+												)
+											) {
+												event.preventDefault();
+											}
+										}}>
 											<input type="hidden" name="intent" value="delete" />
 											<input type="hidden" name="name" value={dossier.name} />
 											<input type="hidden" name="dossierId" value={dossier.id} />
@@ -57,7 +63,7 @@ export function VisaForm({ title, category, dossiers = [] }: DossierCardProps) {
 											>
 												Delete
 											</button>
-										</form>
+										</fetcher.Form>
 									</div>
 								</li>
 							))}

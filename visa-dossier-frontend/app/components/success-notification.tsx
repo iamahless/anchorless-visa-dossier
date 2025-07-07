@@ -1,19 +1,19 @@
 import { Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { XCircleIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 
-export default function ErrorNotification({ showErrorPopup, errorMessage }: { showErrorPopup?: boolean, errorMessage?: string }) {
-	const [show, setShow] = useState(showErrorPopup)
+export default function SuccessNotificationn({ showSuccessPopup, successMessage }: { showSuccessPopup?: boolean, successMessage?: string }) {
+	const [show, setShow] = useState(showSuccessPopup)
 
 	useEffect(() => {
-		if (showErrorPopup) {
+		if (showSuccessPopup) {
 			setShow(true)
 			setTimeout(() => {
 				setShow(false)
 			}, 3000)
 		}
-	}, [showErrorPopup]);
+	}, [showSuccessPopup]);
 
 	return (
 		<>
@@ -22,17 +22,16 @@ export default function ErrorNotification({ showErrorPopup, errorMessage }: { sh
 				className="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
 			>
 				<div className="flex w-full flex-col items-center space-y-4 sm:items-end">
-
 					<Transition show={show}>
 						<div className="pointer-events-auto w-full max-w-sm rounded-lg bg-white shadow-lg ring-1 ring-black/5 transition data-closed:opacity-0 data-enter:transform data-enter:duration-300 data-enter:ease-out data-closed:data-enter:translate-y-2 data-leave:duration-100 data-leave:ease-in data-closed:data-enter:sm:translate-x-2 data-closed:data-enter:sm:translate-y-0">
 							<div className="p-4">
 								<div className="flex items-start">
 									<div className="shrink-0">
-										<XCircleIcon aria-hidden="true" className="size-6 text-red-800" />
+										<CheckCircleIcon aria-hidden="true" className="size-6 text-green-800" />
 									</div>
 									<div className="ml-3 w-0 flex-1 pt-0.5">
-										<p className="text-sm font-medium text-gray-900">An error occurred</p>
-										<p className="mt-1 text-sm text-gray-500">{errorMessage}</p>
+										<p className="text-sm font-medium text-gray-900">Operation was successfully!</p>
+										<p className="mt-1 text-sm text-gray-500">{successMessage}</p>
 									</div>
 									<div className="ml-4 flex shrink-0">
 										<button
