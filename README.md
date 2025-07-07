@@ -1,7 +1,7 @@
 
 # VISA Dossier Management System
 
-This project implements a basic VISA Dossier management feature, allowing users to upload, view, and delete essential visa documents. It consists of a Laravel (API only) backend and a React Router v7 frontend.
+This project implements a basic VISA Dossier management feature, allowing users to upload, view, and delete essential visa documents. It consists of a Laravel (API only) backend and a React (formerly Remix) frontend.
 
 ## Features
 
@@ -35,8 +35,8 @@ Follow these steps to get the backend and frontend running on your local machine
 1.  **Clone the Repository:**
     Navigate to the `visa-dossier-backend`  folder after cloning the main project repository.
     ```bash
-    git clone https://github.com/iamahless/anchorless-visa-dossier.git
-    cd anchorless-visa-dossier/visa-dossier-backend
+    git clone <your-repository-url>
+    cd <your-repository-folder>/visa-dossier-backend
     ```
 
 2.  **Install Composer Dependencies:**
@@ -81,14 +81,25 @@ Follow these steps to get the backend and frontend running on your local machine
 1.  **Navigate to Frontend Directory:**
     Open a new terminal and navigate to the visa-dossier-frontend directory:
     ```bash
-    cd anchorless-visa-dossier/visa-dossier-frontend
+    cd <your-repository-folder>/visa-dossier-frontend
     ```
 
 2.  **Install npm Dependencies:**
     ```bash
     npm install
+    ```
 
-3.  **Start the React Development Server:**
+3. Create environment file:
+    ```bash
+    cp .env.example .env
+    ```
+
+4. Configure the API URL and authentication token in  `.env`:
+    ```bash
+    VITE_API_BASE_URL=http://localhost:3000/api
+    ```
+
+5.  **Start the React Router Development Server:**
     ```bash
     npm run dev 
     ```
@@ -118,5 +129,4 @@ Once both the backend and frontend servers are running, you can test the feature
     * Observe the feedback "File deleted successfully!" or an error message.
     * The file should disappear from the list, and the overall upload progress count should update.
 
-## API Documentation
-https://documenter.getpostman.com/view/25724164/2sB34cpNwR
+---
