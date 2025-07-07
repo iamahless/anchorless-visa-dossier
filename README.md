@@ -35,8 +35,8 @@ Follow these steps to get the backend and frontend running on your local machine
 1.  **Clone the Repository:**
     Navigate to the `visa-dossier-backend`  folder after cloning the main project repository.
     ```bash
-    git clone <your-repository-url>
-    cd <your-repository-folder>/visa-dossier-backend
+    git clone https://github.com/iamahless/anchorless-visa-dossier.git
+    cd anchorless-visa-dossier/visa-dossier-backend
     ```
 
 2.  **Install Composer Dependencies:**
@@ -81,7 +81,7 @@ Follow these steps to get the backend and frontend running on your local machine
 1.  **Navigate to Frontend Directory:**
     Open a new terminal and navigate to the visa-dossier-frontend directory:
     ```bash
-    cd <your-repository-folder>/visa-dossier-frontend
+    cd anchorless-visa-dossier/visa-dossier-frontend
     ```
 
 2.  **Install npm Dependencies:**
@@ -129,4 +129,5 @@ Once both the backend and frontend servers are running, you can test the feature
     * Observe the feedback "File deleted successfully!" or an error message.
     * The file should disappear from the list, and the overall upload progress count should update.
 
----
+## API Documentation
+https://documenter.getpostman.com/view/25724164/2sB34cpNwR
